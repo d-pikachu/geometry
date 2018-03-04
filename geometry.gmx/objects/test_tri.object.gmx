@@ -107,8 +107,13 @@ for(i=0; i&lt;point_count; ++i){
             <kind>1</kind>
             <string>for(i=0; i&lt;len(tri); ++i) {
     draw_triangle_pika(tri[i] , c_blue)
-    if keyboard_check(vk_space)
-     draw_circumcircle(tri[i])
+    //if keyboard_check(vk_space)
+    // draw_circumcircle(tri[i])
+     //draw_triangle_bisectors(tri[i])
+}
+
+for(i=0; i&lt;len(tri); ++i) {
+     draw_triangle_bisectors(tri[i])
 }
 </string>
           </argument>

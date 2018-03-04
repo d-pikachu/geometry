@@ -22,6 +22,7 @@
       <script>scripts\draw_point_pika.gml</script>
       <script>scripts\draw_line_pika.gml</script>
       <script>scripts\draw_circumcircle.gml</script>
+      <script>scripts\draw_triangle_bisectors.gml</script>
     </scripts>
     <script>scripts\ref.gml</script>
     <script>scripts\same_line.gml</script>
