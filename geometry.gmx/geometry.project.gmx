@@ -11,7 +11,6 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
-    <script>scripts\normal.gml</script>
     <scripts name="starter">
       <script>scripts\triangle.gml</script>
       <script>scripts\point.gml</script>
@@ -25,7 +24,6 @@
       <script>scripts\draw_triangle_bisectors.gml</script>
     </scripts>
     <script>scripts\ref.gml</script>
-    <script>scripts\same_line.gml</script>
     <scripts name="delaunay_bowyer_watson">
       <script>scripts\delaunay_pika.gml</script>
     </scripts>
@@ -41,6 +39,13 @@
       <script>scripts\insert.gml</script>
       <script>scripts\len.gml</script>
     </scripts>
+    <scripts name="line">
+      <script>scripts\normal.gml</script>
+      <script>scripts\same_line.gml</script>
+      <script>scripts\line_mid.gml</script>
+    </scripts>
+    <script>scripts\is_in_range.gml</script>
+    <script>scripts\poop.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\test_tri</object>

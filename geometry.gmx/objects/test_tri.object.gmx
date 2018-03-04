@@ -113,7 +113,27 @@ for(i=0; i&lt;point_count; ++i){
 }
 
 for(i=0; i&lt;len(tri); ++i) {
-     draw_triangle_bisectors(tri[i])
+   // lt = tri[i] 
+    //draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X2], lt[Y2])))
+   // draw_line_pika(normal(line(lt[X2], lt[Y2], lt[X3], lt[Y3])))
+   // draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X3], lt[Y3])))
+  // poop(tri[i]);
+}
+
+for(i=0; i&lt;len(tri); ++i) {
+
+    
+    draw_triangle_bisectors(tri[i]);
+    /*
+    lt = tri[i];
+    la = normal(line(lt[X1], lt[Y1], lt[X2], lt[Y2]));
+    lb = normal(line(lt[X2], lt[Y2], lt[X3], lt[Y3]));
+    lc = normal(line(lt[X1], lt[Y1], lt[X3], lt[Y3]));
+    draw_line_pika(la);
+    draw_line_pika(lb);
+    draw_line_pika(lc);*/
+   // poop(tri[i]);
+
 }
 </string>
           </argument>
