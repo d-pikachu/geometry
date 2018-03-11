@@ -25,13 +25,23 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>tri=0;
-alarm[0] = 100
-min_point = point(0, 0);
-max_point = point(W, H);
+            <string>///INIT
+tri = NADA;
+min_pnt = point(-1,-1)
+max_pnt = point(room_width+1,room_height+1)
+tttt = NADA;
 
-
-
+//---------------------------------------------------------------------------------//
+//super triangle
+sup_tri[0] = triangle(min_pnt, point(max_pnt[X], 0), point(0, max_pnt[Y]));
+sup_tri[1] = triangle(max_pnt, point(max_pnt[X], 0), point(0, max_pnt[Y]));
+//---------------------------------------------------------------------------------//
+//CORNERS
+corner[0] = point(0, max_pnt[Y])
+corner[1] = point(max_pnt[X], 0)
+corner[2] = min_pnt
+corner[3] = max_pnt
+//---------------------------------------------------------------------------------//
 </string>
           </argument>
         </arguments>
@@ -54,12 +64,12 @@ max_point = point(W, H);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///getting points
-points = 0
-point_count = instance_number(o_point);
-for(i=0; i&lt;point_count; ++i){
-    cp = instance_find(o_point,i);
-    points[i]= point(cp.x, cp.y)
+            <string>///GET SITES
+sites = NADA
+sites_count = instance_number(o_point);
+for(i=0; i&lt;sites_count; ++i){
+    temp = instance_find(o_point,i);
+    sites[i]= point(temp.x, temp.y)
 }
 
 </string>
@@ -82,7 +92,84 @@ for(i=0; i&lt;point_count; ++i){
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>tri =  delaunay_pika(points,min_point,max_point)
+            <string>///GETTING D-TRIANGLES
+tris = NADA
+tri = NADA
+//---------------------------------------------------------------------------------//
+tris[len(tris)] = sup_tri[0] //SUPER
+tris[len(tris)] = sup_tri[1] //TRIANGLES
+//---------------------------------------------------------------------------------//
+
+temp[0] = len(sites);
+for(i=0; i &lt; temp[0]; ++i){
+
+    temp[1] = len(tris);
+    _site = sites[i];
+    bad_tris = NADA;
+    for(j=0; j &lt; temp[1]; ++j) {
+        _tri = tris[j];
+        if point_distance(_site[X], _site[Y], _tri[CX], _tri[CY]) &lt;= _tri[CR] 
+            bad_tris[len(bad_tris)] = _tri;
+    }
+    
+//---------------------------------------------------------------------------------//  
+
+    temp[1] = len(bad_tris);
+    for(j=0; j &lt; temp[1]; ++j) 
+        tris = remove_triangle(tris, bad_tris[j]); //remove bad triangles from main list
+        
+//---------------------------------------------------------------------------------// 
+        
+    _edges = NADA;
+    for(j=0; j &lt; temp[1]; ++j) {
+        var flag=NADA; 
+        temp[2]=true 
+        temp[3]=true
+        temp[4]=true
+        _tri = bad_tris[j];
+        for(k=0; k &lt; temp[1]; ++k) {
+                
+            if j == k continue;
+            if temp[2] and line_in_triangle(_tri[V1], bad_tris[k]) temp[2] =false;
+            if temp[3] and line_in_triangle(_tri[V2], bad_tris[k]) temp[3] =false;
+            if temp[4] and line_in_triangle(_tri[V3], bad_tris[k]) temp[4] =false;
+        }   
+        
+        if temp[2]  _edges[len(_edges)] = _tri[V1];
+        if temp[3]  _edges[len(_edges)] = _tri[V2];
+        if temp[4]  _edges[len(_edges)] = _tri[V3];
+    }
+    
+//---------------------------------------------------------------------------------//
+
+    temp[1] = len(_edges);
+    for(j=0; j &lt; temp[1]; ++j) {
+        _edge = _edges[j];
+        tris[len(tris)] = triangle(_site, point(_edge[X1], _edge[Y1]), point(_edge[X2], _edge[Y2]))
+    }
+}
+
+//---------------------------------------------------------------------------------//
+
+temp = len(tris)
+for(i=0; i &lt; temp; ++i)
+    if !border_triangle(tris[i], min_pnt, max_pnt)
+        tri[len(tri)] = tris[i]
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 </string>
           </argument>
         </arguments>
@@ -105,36 +192,402 @@ for(i=0; i&lt;point_count; ++i){
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>for(i=0; i&lt;len(tri); ++i) {
+            <string>for(var i=0; i&lt;len(tri); ++i) {
+
     draw_triangle_pika(tri[i] , c_blue)
-    //if keyboard_check(vk_space)
-    // draw_circumcircle(tri[i])
+    if keyboard_check(vk_space)
+    draw_circumcircle(tri[i])
      //draw_triangle_bisectors(tri[i])
+     
 }
 
-for(i=0; i&lt;len(tri); ++i) {
-   // lt = tri[i] 
-    //draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X2], lt[Y2])))
-   // draw_line_pika(normal(line(lt[X2], lt[Y2], lt[X3], lt[Y3])))
-   // draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X3], lt[Y3])))
-  // poop(tri[i]);
+
+for(var i=0; i&lt;len(tri); ++i) {
+
+/*
+    if keyboard_check(ord(string(i+1))) and 1{
+    lt = tri[i] 
+    draw_set_color(c_green)
+    draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X2], lt[Y2])))
+    draw_line_pika(normal(line(lt[X2], lt[Y2], lt[X3], lt[Y3])))
+    draw_line_pika(normal(line(lt[X1], lt[Y1], lt[X3], lt[Y3])))
+    draw_set_color(c_black)
+   }
+   //if keyboard_check(vk_space)
+    //poop(tri[i]);
+    */
 }
 
-for(i=0; i&lt;len(tri); ++i) {
 
+for(var i=0; i&lt;len(tri); ++i) {
+   // draw_triangle_bisectors(tri[i]);
     
-    draw_triangle_bisectors(tri[i]);
-    /*
-    lt = tri[i];
-    la = normal(line(lt[X1], lt[Y1], lt[X2], lt[Y2]));
-    lb = normal(line(lt[X2], lt[Y2], lt[X3], lt[Y3]));
-    lc = normal(line(lt[X1], lt[Y1], lt[X3], lt[Y3]));
-    draw_line_pika(la);
-    draw_line_pika(lb);
-    draw_line_pika(lc);*/
-   // poop(tri[i]);
-
 }
+
+
+/*for(var i=0; i&lt;len(sites); ++i) {
+   //draw_text(pp[X],pp[Y]-27,string(region(pp,tri)));
+   if keyboard_check(ord(string(i+1))) {
+   
+    pp = sites[i]
+    output = region(pp, tri, sites)
+    draw_text(pp[X], pp[Y]-30, "Me!")
+    draw_text(10, 20, output)
+   }
+}*/
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///GETTING REGION OLD
+/*
+temp[0] = len(sites);
+for(i=0; i&lt;temp[0]; ++i){
+
+//---------------------------------------------------------------------------------//
+//GETTING EDGES
+    _edges = NADA;
+    _site = sites[i]
+    temp[1] = len(tri);
+    for(j=0; j&lt;temp[1]; ++j){
+        
+        _tri = tri[j]
+        if vertex_of_triangle(_site, _tri){
+            
+            if point_in_line(_site,_tri[V1]) _edges[len(_edges)] = _tri[V1]
+            if point_in_line(_site,_tri[V2]) _edges[len(_edges)] = _tri[V2] 
+            if point_in_line(_site,_tri[V3]) _edges[len(_edges)] = _tri[V3]
+        }
+    }
+//---------------------------------------------------------------------------------//
+//HAFIE NORMIES  
+    _norms = NADA
+    _vert = NADA
+    temp[1] = len(_edges)
+    for(j=0; j&lt;temp[1]; ++j){
+        //_mid = line_mid(_edges[j])
+        _norm = normal(_edges[j])
+        
+        _norms[len(_norms)] = normal(_edges[j])
+        _vert[len(_vert)] = point(_norm[X1], _norm[Y1])
+        _vert[len(_vert)] = point(_norm[X2], _norm[Y2])
+    }
+    _edges = _norms
+//---------------------------------------------------------------------------------//
+//bisecs
+    temp[1] = len(_edges)
+    for(j=0; j&lt;temp[1]; ++j){
+        for(k=0; k&lt;temp[1]; ++k){
+            if j==k continue;
+            //_pnt = line_intersection(_edges[j], _edges[k])
+            _pnt = line_intersection(shorter_line(_edges[j],1), shorter_line(_edges[k],1))
+            if _pnt[X]!=NADA{
+                _vert[len(_vert)] = _pnt
+            }
+        }
+    }
+
+//WELCOME CORNERS
+    for(j=0; j&lt;4; ++j)
+        _vert[len(_vert)] = corner[j]
+//---------------------------------------------------------------------------------//
+//VORONOI VERTICES
+    temp[1] = len(_vert)
+    temp[2] = len(_edges)
+    _region = NADA
+    for(j=0; j&lt;temp[1]; ++j){
+        _pnt = _vert[j]
+        _line = line(_site[X], _site[Y], _pnt[X], _pnt[Y])
+        temp[3] = true
+        for(k=0; k&lt;temp[2]; ++k){
+            
+            _norm = line_intersection(shorter_line(_edges[k],0.1), shorter_line(_line, 0.1))
+            if temp[3] and _norm[X]!=NADA {
+                temp[3] = false
+                break;
+            }
+        }
+        if temp[3] _region[len(_region)] = _pnt
+    }
+    
+    _vert = _region
+//---------------------------------------------------------------------------------//
+//sort vert by angle &gt;()&lt;
+    
+    _dir = NADA
+    temp[1] = len(_vert)
+    for(j=0; j&lt;temp[1]; ++j) {
+    _pnt = _vert[j]
+    _dir[j] = point_direction(_site[X], _site[Y], _pnt[X], _pnt[Y])
+    }
+
+//---------------------------------------------------------------------------------//
+//filter bisecs
+    _pnt = _dir
+    _norm = _vert
+    _vert = NADA
+    for(j=0; j&lt;temp[1]; ++j){
+    
+        for(k=0; k&lt;temp[1]; ++k){
+            if j==k continue;
+            if !_pnt[j]!=NADA and _pnt[j]==_pnt[k]{
+                _pnt[k] = NADA
+            }
+        }
+    }
+    for(j=0; j&lt;temp[1]; ++j) 
+        if _pnt[j]!=NADA
+            _vert[len(_vert)] = _norm[j]
+
+    //_vert = _vert_f
+//---------------------------------------------------------------------------------//
+   
+   for(j=1; j&lt;temp[1]; ++j){
+       _pnt = _dir[j]
+       _norm = _vert[j]
+       k = j-1;
+        
+       while (k &gt;= 0 &amp;&amp; _dir[k] &gt; _pnt){
+           _dir[k+1] = _dir[k];
+           _vert[k+1] = _vert[k];
+           k--;
+       }
+       _dir[k+1] = _pnt;
+       _vert[k+1] = _norm ;
+    }
+
+//---------------------------------------------------------------------------------//
+    if keyboard_check(ord(string(i+1))){
+        draw_text(_site[X], _site[Y]-30, "ME!")
+        draw_text(10, 15, "VERT - " + string(len(_vert)))
+        draw_text(10, 30, "dirs - " + string(_vert_f))
+        draw_set_color(c_red)
+        /*
+        for(j=0; j&lt;len(_edges); ++j){
+            draw_line_ends(_edges[j])
+        }
+        */
+        /*
+        for(j=0; j&lt;len(_vert); ++j){
+            draw_point_square(_vert[j], 10)
+        }*/
+        /*
+        draw_primitive_begin(pr_trianglefan)
+        draw_set_alpha(0.3)
+        draw_vertex(_site[X], _site[Y])
+        for(j=0; j&lt;len(_region); ++j){
+            _pnt = _region[j]
+            draw_vertex(_pnt[X], _pnt[Y])
+        }*/
+        /*if len(_region)&gt;0 {
+        _pnt = _region[0]
+        draw_vertex(_pnt[X], _pnt[Y])
+        }*//*
+        draw_set_alpha(1)
+        draw_primitive_end()
+        
+        draw_set_color(c_black)
+    }
+//---------------------------------------------------------------------------------//
+}
+*/
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///GETTING REGION
+
+temp[0] = len(sites);
+for(i=0; i&lt;temp[0]; ++i){
+
+//---------------------------------------------------------------------------------//
+//GETTING EDGES
+    _edges = NADA;
+    _site = sites[i]
+    temp[1] = len(tri);
+    for(j=0; j&lt;temp[1]; ++j){
+        
+        _tri = tri[j]
+        if vertex_of_triangle(_site, _tri){
+            
+            if point_in_line(_site,_tri[V1]) _edges[len(_edges)] = _tri[V1]
+            if point_in_line(_site,_tri[V2]) _edges[len(_edges)] = _tri[V2] 
+            if point_in_line(_site,_tri[V3]) _edges[len(_edges)] = _tri[V3]
+        }
+    }
+//---------------------------------------------------------------------------------//
+//HAFIE NORMIES  
+    _norms = NADA
+    _vert = NADA
+    temp[1] = len(_edges)
+    for(j=0; j&lt;temp[1]; ++j){
+        //_mid = line_mid(_edges[j])
+        _norm = normal(_edges[j])
+        
+        _norms[len(_norms)] = normal(_edges[j])
+        _vert[len(_vert)] = point(_norm[X1], _norm[Y1])
+        _vert[len(_vert)] = point(_norm[X2], _norm[Y2])
+    }
+    _edges = _norms
+//---------------------------------------------------------------------------------//
+//bisecs
+    temp[1] = len(_edges)
+    for(j=0; j&lt;temp[1]; ++j){
+        for(k=0; k&lt;temp[1]; ++k){
+            if j==k continue;
+            //_pnt = line_intersection(_edges[j], _edges[k])
+            _pnt = line_intersection(shorter_line(_edges[j],1), shorter_line(_edges[k],1))
+            if _pnt[X]!=NADA{
+                _vert[len(_vert)] = _pnt
+            }
+        }
+    }
+
+//WELCOME CORNERS
+    for(j=0; j&lt;4; ++j)
+        _vert[len(_vert)] = corner[j]
+//---------------------------------------------------------------------------------//
+//VORONOI VERTICES
+    temp[1] = len(_vert)
+    temp[2] = len(_edges)
+    _region = NADA
+    for(j=0; j&lt;temp[1]; ++j){
+        _pnt = _vert[j]
+        _line = line(_site[X], _site[Y], _pnt[X], _pnt[Y])
+        temp[3] = true
+        for(k=0; k&lt;temp[2]; ++k){
+            
+            _norm = line_intersection(shorter_line(_edges[k],0.1), shorter_line(_line, 0.1))
+            if temp[3] and _norm[X]!=NADA {
+                temp[3] = false
+                break;
+            }
+        }
+        if temp[3] _region[len(_region)] = _pnt
+    }
+    
+    _vert = _region
+//---------------------------------------------------------------------------------//
+//sort vert by angle &gt;()&lt;
+    
+    _dir = NADA
+    temp[1] = len(_vert)
+    for(j=0; j&lt;temp[1]; ++j) {
+    _pnt = _vert[j]
+    _dir[j] = point_direction(_site[X], _site[Y], _pnt[X], _pnt[Y])
+    }
+
+//---------------------------------------------------------------------------------//
+//filter bisecs
+    _pnt = _dir
+    _norm = _vert
+    _vert = NADA
+    for(j=0; j&lt;temp[1]; ++j){
+    
+        for(k=0; k&lt;temp[1]; ++k){
+            if j==k continue;
+            if _pnt[j]!=NADA and _pnt[j]==_pnt[k]{
+                _pnt[k] = NADA
+            }
+        }
+    }
+    for(j=0; j&lt;temp[1]; ++j) 
+        if _pnt[j]!=NADA
+            _vert[len(_vert)] = _norm[j]
+
+    //_vert = _vert_f
+//---------------------------------------------------------------------------------//
+    _dir = NADA
+    temp[1] = len(_vert)
+    for(j=0; j&lt;temp[1]; ++j) {
+    _pnt = _vert[j]
+    _dir[j] = point_direction(_site[X], _site[Y], _pnt[X], _pnt[Y])
+    }   
+
+   for(j=1; j&lt;temp[1]; ++j){
+       _pnt = _dir[j]
+       _norm = _vert[j]
+       k = j-1;
+        
+       while (k &gt;= 0 &amp;&amp; _dir[k] &gt; _pnt){
+           _dir[k+1] = _dir[k];
+           _vert[k+1] = _vert[k];
+           k--;
+       }
+       _dir[k+1] = _pnt;
+       _vert[k+1] = _norm ;
+    }
+_region = _vert
+//---------------------------------------------------------------------------------//
+    if keyboard_check(ord(string(i+1))){
+        draw_text(_site[X], _site[Y]-30, "ME!")
+        draw_text(10, 15, "VERT - " + string(len(_vert)))
+        draw_text(10, 30, "dirs - " + string(_region))
+        draw_set_color(c_red)
+        /*
+        for(j=0; j&lt;len(_edges); ++j){
+            draw_line_ends(_edges[j])
+        }
+        */
+        /*
+        for(j=0; j&lt;len(_vert); ++j){
+            draw_point_square(_vert[j], 10)
+        }*/
+        
+        draw_primitive_begin(pr_trianglefan)
+        draw_set_alpha(0.3)
+        draw_vertex(_site[X], _site[Y])
+        for(j=0; j&lt;len(_region); ++j){
+            _pnt = _region[j]
+            draw_vertex(_pnt[X], _pnt[Y])
+        }
+        if len(_region)&gt;0 {
+        _pnt = _region[0]
+        draw_vertex(_pnt[X], _pnt[Y])
+        }
+        draw_set_alpha(1)
+        draw_primitive_end()
+        
+        draw_set_color(c_black)
+    }
+//---------------------------------------------------------------------------------//
+}
+
+
 </string>
           </argument>
         </arguments>

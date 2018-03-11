@@ -13,6 +13,7 @@
   <scripts name="scripts">
     <scripts name="starter">
       <script>scripts\triangle.gml</script>
+      <script>scripts\triangle_old.gml</script>
       <script>scripts\point.gml</script>
       <script>scripts\line.gml</script>
     </scripts>
@@ -20,32 +21,45 @@
       <script>scripts\draw_triangle_pika.gml</script>
       <script>scripts\draw_point_pika.gml</script>
       <script>scripts\draw_line_pika.gml</script>
+      <script>scripts\draw_line_ends.gml</script>
       <script>scripts\draw_circumcircle.gml</script>
       <script>scripts\draw_triangle_bisectors.gml</script>
+      <script>scripts\draw_point_square.gml</script>
     </scripts>
     <script>scripts\ref.gml</script>
     <scripts name="delaunay_bowyer_watson">
       <script>scripts\delaunay_pika.gml</script>
+      <script>scripts\delaunay_pika_new.gml</script>
     </scripts>
     <scripts name="triangle">
       <script>scripts\remove_triangle.gml</script>
       <script>scripts\line_in_triangle.gml</script>
+      <script>scripts\vertex_of_triangle.gml</script>
       <script>scripts\same_triangle.gml</script>
       <script>scripts\circumcircle_y.gml</script>
       <script>scripts\circumcircle_x.gml</script>
       <script>scripts\border_triangle.gml</script>
+      <script>scripts\sister_vertex_triangle.gml</script>
     </scripts>
     <scripts name="arr_ops">
       <script>scripts\insert.gml</script>
       <script>scripts\len.gml</script>
     </scripts>
+    <script>scripts\same_point.gml</script>
     <scripts name="line">
       <script>scripts\normal.gml</script>
       <script>scripts\same_line.gml</script>
       <script>scripts\line_mid.gml</script>
+      <script>scripts\line_intersection.gml</script>
+      <script>scripts\filter_line.gml</script>
+      <script>scripts\shorter_line.gml</script>
     </scripts>
     <script>scripts\is_in_range.gml</script>
-    <script>scripts\poop.gml</script>
+    <script>scripts\region.gml</script>
+    <script>scripts\region_new.gml</script>
+    <script>scripts\gradually.gml</script>
+    <script>scripts\point_in_rect.gml</script>
+    <script>scripts\point_in_line.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\test_tri</object>
@@ -56,7 +70,7 @@
   <rooms name="rooms">
     <room>rooms\room0</room>
   </rooms>
-  <constants number="23">
+  <constants number="28">
     <constant name="W">800</constant>
     <constant name="H">600</constant>
     <constant name="none">noone</constant>
@@ -71,6 +85,10 @@
     <constant name="CX">6</constant>
     <constant name="CY">7</constant>
     <constant name="CR">8</constant>
+    <constant name="V1">9</constant>
+    <constant name="V2">10</constant>
+    <constant name="V3">11</constant>
+    <constant name="ACTIVE">12</constant>
     <constant name="WIDTH">4</constant>
     <constant name="HEIGHT">5</constant>
     <constant name="HORIZONTAL">0</constant>
@@ -80,6 +98,7 @@
     <constant name="DOWN">2</constant>
     <constant name="LEFT">3</constant>
     <constant name="TOP_LEFT">point(0,0)</constant>
+    <constant name="NADA">-1</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

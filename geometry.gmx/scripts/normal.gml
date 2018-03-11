@@ -24,8 +24,8 @@ p_[3] = point(((hh-p_mid[Y])/m)+ p_mid[X], hh)
 
 
 var l_t=0, //local index
-e_p=-1; //end points
-for(i=0 ; i<=3 ; ++i) {
+var e_p=-1; //end points
+for(var i=0 ; i<=3 ; ++i) {
     c_p = p_[i] //current_point
     if is_in_range(c_p[X],0,ww) and is_in_range(c_p[Y],0,hh) {
         e_p[l_t] = c_p
@@ -36,5 +36,8 @@ for(i=0 ; i<=3 ; ++i) {
 //for the love of pee poo god fix thiss!!!!!
 var ra = e_p[0];
 var rb = e_p[1];
+
+//draw_point_pika(ra);
+//draw_point_pika(rb)
 
 return line(ra[X], ra[Y], rb[X], rb[Y]);
